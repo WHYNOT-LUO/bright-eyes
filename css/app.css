@@ -1,0 +1,374 @@
+/* app.css — all the styles (colours, sizes, layout) for the app.
+   Colours and sizes are set once at the top as variables (--name),
+   so changing the look usually means editing a few lines here. */
+
+/* ---------- Colours and sizes ---------- */
+:root {
+  --bg: #f4f7f3;
+  --surface: #ffffff;
+  --text: #1c2a23;
+  --muted: #56655d;
+  --border: #dde5df;
+  --primary: #1f7a4d; /* outdoor green: main buttons, active tab */
+  --on-primary: #ffffff; /* text on top of --primary */
+  --primary-soft: #e2f1e8;
+  --warn-soft: #fff3dc;
+  --warn-text: #6e4300;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+
+  --radius: 16px;
+  --gap: 12px;
+  --tap: 48px; /* smallest comfortable finger target */
+  --tabbar-h: 60px;
+
+  color-scheme: light dark;
+}
+
+/* Dark mode follows the phone's setting. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111814;
+    --surface: #1b241f;
+    --text: #e6efe9;
+    --muted: #a3b5ab;
+    --border: #2d3b33;
+    --primary: #5bcf95;
+    --on-primary: #0b1a12;
+    --primary-soft: #1d3428;
+    --warn-soft: #3a2c12;
+    --warn-text: #ffd791;
+    --shadow: none;
+  }
+}
+
+/* ---------- Page ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+h2 {
+  font-size: 20px;
+}
+h3 {
+  font-size: 17px;
+}
+p {
+  margin: 0 0 8px;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: 14px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 8px) 16px 8px;
+  background: var(--bg);
+}
+
+.app-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.lang-toggle {
+  min-width: 56px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- Screen area (between header and tab bar) ---------- */
+.screen {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 4px 16px calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 24px);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  margin-bottom: var(--gap);
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.card-tip {
+  background: var(--primary-soft);
+  border-color: transparent;
+}
+.card-warn {
+  background: var(--warn-soft);
+  border-color: transparent;
+  color: var(--warn-text);
+}
+
+.hero {
+  padding: 24px 16px;
+  text-align: center;
+}
+.hero img {
+  margin-bottom: 8px;
+}
+.hero h2 {
+  font-size: 24px;
+}
+
+.soon {
+  padding: 32px 16px;
+  text-align: center;
+}
+.soon-icon {
+  margin-bottom: 8px;
+  font-size: 40px;
+}
+
+.pill {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.footnote {
+  margin: 16px 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--tap);
+  padding: 0 20px;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.btn-block {
+  width: 100%;
+}
+
+/* Two or more buttons joined together, e.g. 中文 | English */
+.segmented {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.segmented button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.segmented button[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+/* ---------- Bottom tab bar (within thumb reach) ---------- */
+.tabbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.tabbar a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tabbar-h);
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+.tabbar a[aria-current='page'] {
+  color: var(--primary);
+  font-weight: 700;
+}
+.tab-icon {
+  font-size: 22px;
+  line-height: 1;
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+.tabbar a[aria-current='page'] .tab-icon {
+  filter: none;
+  opacity: 1;
+}
+
+/* ---------- Welcome sheet (slides up from the bottom, easy to reach) ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgb(0 0 0 / 0.4);
+}
+.overlay[hidden] {
+  display: none;
+}
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 92vh;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: 24px 20px calc(env(safe-area-inset-bottom) + 20px);
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+}
+.slide-up {
+  animation: slide-up 0.25s ease-out;
+}
+.sheet-icon {
+  display: block;
+  margin-bottom: 12px;
+}
+.sheet h3 {
+  margin-top: 16px;
+}
+.sheet .btn-block {
+  margin-top: 20px;
+}
+.notice {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--warn-soft);
+  color: var(--warn-text);
+  font-size: 15px;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ---------- Toast (short message above the tab bar) ---------- */
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 12px);
+  left: 16px;
+  z-index: 30;
+  max-width: 448px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 15px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

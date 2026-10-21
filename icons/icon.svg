@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- App icon: an eye with the sun (outdoor light). scripts/make_icons.py draws the same design as PNGs. -->
+  <defs>
+    <clipPath id="eye"><path d="M96 272 Q256 120 416 272 Q256 424 96 272 Z" /></clipPath>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#2a9361" />
+  <circle cx="392" cy="120" r="40" fill="#ffd166" />
+  <path d="M96 272 Q256 120 416 272 Q256 424 96 272 Z" fill="#ffffff" />
+  <g clip-path="url(#eye)">
+    <circle cx="256" cy="272" r="68" fill="#1f5f7a" />
+    <circle cx="256" cy="272" r="30" fill="#0f2a36" />
+    <circle cx="278" cy="250" r="12" fill="#ffffff" />
+  </g>
+</svg>
