@@ -18,9 +18,10 @@ import { renderWelcome } from './screens/welcome.js';
 import { renderChildForm } from './screens/child-form.js';
 import { renderTimer, tickTimer } from './screens/timer.js';
 import { renderCheckupForm } from './screens/checkup-form.js';
+import { renderWeek } from './screens/week.js';
 import { keepScreenOn } from './alerts.js';
 
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.6.0';
 
 // The tabs along the bottom, in order.
 const TABS = [
@@ -35,7 +36,7 @@ const TABS = [
 const SCREENS = {
   today: renderToday,
   timer: renderTimer,
-  week: renderComingSoon,
+  week: renderWeek,
   learn: renderComingSoon,
   settings: renderSettings,
   child: renderChildForm, // #/child/new  or  #/child/<id>

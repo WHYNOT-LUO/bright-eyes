@@ -38,6 +38,16 @@ export function formatDate(text) {
   return new Intl.DateTimeFormat(locale(), { dateStyle: 'medium' }).format(fromDateString(text));
 }
 
+// '2026-10-16' → '10月16日' or 'Oct 16'
+export function formatShortDate(text) {
+  return new Intl.DateTimeFormat(locale(), { month: 'short', day: 'numeric' }).format(fromDateString(text));
+}
+
+// '2026-10-16' → '周五' or 'Fri'
+export function formatWeekday(text) {
+  return new Intl.DateTimeFormat(locale(), { weekday: 'short' }).format(fromDateString(text));
+}
+
 // '2026-12-15', '09:30' → '2026年12月15日周二 09:30' or 'Tue, December 15, 2026 09:30'
 export function formatDateLong(text, time) {
   const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };

@@ -40,6 +40,7 @@ const APP_FILES = [
   './js/screens/timer.js',
   './js/screens/today-log.js',
   './js/screens/today.js',
+  './js/screens/week.js',
   './js/screens/welcome.js',
   './content/strings.js',
   './icons/apple-touch-icon.png',
