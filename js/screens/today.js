@@ -1,16 +1,17 @@
 // today.js — the "Today" tab, the first screen parents see.
-// Stage 2: the selected child's profile, switching between children, install help.
+// Switch child, log today's outdoor and near-work time, see the child's profile.
 
 import { t } from '../i18n.js';
 import { esc, ageLabel, childAvatar, prescriptionTable } from '../ui.js';
 import { getActiveChild } from '../children.js';
 import { isAndroid, isIOS, isInstalled, isWeChat, canPromptInstall, promptInstall } from '../device.js';
+import { logCard, bindLogCard } from './today-log.js';
 
 export function renderToday(main, ctx) {
   const child = getActiveChild(ctx.data);
 
   main.innerHTML = `
-    ${child ? childSwitcher(ctx.data, child) + childCard(child) : startCard()}
+    ${child ? childSwitcher(ctx.data, child) + logCard(ctx.data, child) + childCard(child) : startCard()}
 
     ${installCard()}
 
@@ -21,6 +22,8 @@ export function renderToday(main, ctx) {
 
     <p class="footnote">${t('disclaimer.text')}</p>
   `;
+
+  if (child) bindLogCard(main, ctx, child);
 
   main.querySelectorAll('[data-child]').forEach((button) => {
     button.addEventListener('click', () => {

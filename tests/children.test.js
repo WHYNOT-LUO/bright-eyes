@@ -109,6 +109,22 @@ test('removing the active child switches to another child', () => {
   assert.deepEqual(data.children, []);
 });
 
+test('removing a child also deletes their daily log', () => {
+  const data = defaultData();
+  const id = saveChild(data, input());
+  data.logs[id] = { '2026-10-22': { entries: [{ type: 'outdoor', minutes: 30, at: 1 }] } };
+  removeChild(data, id);
+  assert.equal(data.logs[id], undefined);
+});
+
+test('daily goals are saved with the child', () => {
+  const data = defaultData();
+  const id = saveChild(data, input({ goals: { outdoor: 90, nearWork: 150 } }));
+  assert.deepEqual(data.children[0].goals, { outdoor: 90, nearWork: 150 });
+  saveChild(data, input({ id, name: 'B' })); // a save without goals keeps the old ones
+  assert.deepEqual(data.children[0].goals, { outdoor: 90, nearWork: 150 });
+});
+
 test('getActiveChild falls back to the first child, or null when there are none', () => {
   const data = defaultData();
   assert.equal(getActiveChild(data), null);

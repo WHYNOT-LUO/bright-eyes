@@ -11,6 +11,7 @@
 //       right: { sph: -1.5, cyl: -0.5 },
 //       left:  { sph: -1.25, cyl: null },
 //     },
+//     goals: { outdoor: 120, nearWork: 180 },   // minutes a day; see js/log.js
 //   }
 // sph = sphere (球镜), cyl = cylinder (柱镜), in dioptres.
 // A sphere of -1.50 is what people call "150 度".
@@ -75,6 +76,7 @@ export function saveChild(data, input, makeId = newId) {
     birth: input.birth,
     rx: cleanPrescription(input.rx),
   };
+  if (input.goals) child.goals = { outdoor: input.goals.outdoor, nearWork: input.goals.nearWork };
 
   const index = data.children.findIndex((c) => c.id === child.id);
   if (index === -1) {
@@ -86,9 +88,10 @@ export function saveChild(data, input, makeId = newId) {
   return child.id;
 }
 
-// Later stages will also delete this child's daily logs here.
+// Removes the child and everything logged for them.
 export function removeChild(data, id) {
   data.children = data.children.filter((c) => c.id !== id);
+  delete data.logs[id];
   if (data.activeChildId === id) data.activeChildId = data.children[0]?.id ?? null;
 }
 

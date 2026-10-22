@@ -17,7 +17,7 @@ import { renderSettings } from './screens/settings.js';
 import { renderWelcome } from './screens/welcome.js';
 import { renderChildForm } from './screens/child-form.js';
 
-const APP_VERSION = '0.2.0';
+const APP_VERSION = '0.3.0';
 
 // The tabs along the bottom, in order.
 const TABS = [
@@ -54,7 +54,7 @@ const ctx = {
     draw();
   },
   redraw: () => draw(),
-  toast: (message) => showToast(message),
+  toast: (message, ms) => showToast(message, ms),
   go: (path) => {
     location.hash = '#/' + path;
   },
@@ -108,11 +108,11 @@ function draw() {
 }
 
 let toastTimer;
-function showToast(message) {
+function showToast(message, ms = 5000) {
   el.toast.textContent = message;
   el.toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.toast.classList.remove('show'), 5000);
+  toastTimer = setTimeout(() => el.toast.classList.remove('show'), ms);
 }
 
 el.langToggle.addEventListener('click', () => {
@@ -124,6 +124,12 @@ el.langToggle.addEventListener('click', () => {
 window.addEventListener('hashchange', () => {
   draw();
   window.scrollTo(0, 0);
+});
+
+// Coming back to the app (maybe the next morning): refresh Today so it shows the
+// right day. Other screens are left alone so a half-filled form isn't wiped.
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && currentRoute().name === 'today') draw();
 });
 
 listenForInstallPrompt(draw);

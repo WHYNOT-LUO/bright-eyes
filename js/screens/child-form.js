@@ -2,7 +2,7 @@
 // Address: #/child/new (add) or #/child/<id> (edit).
 
 import { t } from '../i18n.js';
-import { esc } from '../ui.js';
+import { esc, formatDuration } from '../ui.js';
 import { toDateString, toMonthString } from '../dates.js';
 import {
   CYLINDER_RANGE,
@@ -15,6 +15,7 @@ import {
   saveChild,
   validateChild,
 } from '../children.js';
+import { NEAR_WORK_LIMIT_CHOICES, OUTDOOR_GOAL_CHOICES, goalsFor } from '../log.js';
 
 const NO_PRESCRIPTION = { date: null, right: { sph: null, cyl: null }, left: { sph: null, cyl: null } };
 
@@ -26,6 +27,7 @@ export function renderChildForm(main, ctx, route) {
   }
   const child = existing ?? { name: '', birth: '' };
   const rx = existing?.rx ?? NO_PRESCRIPTION;
+  const goals = goalsFor(child);
 
   const today = new Date();
   const oldestBirth = new Date(today.getFullYear() - MAX_AGE, today.getMonth() + 1, 1);
@@ -50,6 +52,15 @@ export function renderChildForm(main, ctx, route) {
         <p class="hint" data-age>${ageHint(child.birth)}</p>
         <p class="field-error" data-error-for="birth" hidden></p>
       </div>
+
+      <fieldset class="field">
+        <legend>${t('child.goals')}</legend>
+        <p class="hint">${t('child.goalsHint')}</p>
+        <label for="goal-outdoor">${t('child.goalOutdoor')}</label>
+        ${minutesSelect('goal-outdoor', 'goalOutdoor', OUTDOOR_GOAL_CHOICES, goals.outdoor)}
+        <label for="goal-near-work">${t('child.goalNearWork')}</label>
+        ${minutesSelect('goal-near-work', 'goalNearWork', NEAR_WORK_LIMIT_CHOICES, goals.nearWork)}
+      </fieldset>
 
       <fieldset class="field">
         <legend>${t('child.rx')}</legend>
@@ -131,6 +142,13 @@ function diopterSelect(name, value, range, label) {
     </select>`;
 }
 
+function minutesSelect(id, name, choices, value) {
+  const options = choices
+    .map((m) => `<option value="${m}" ${m === value ? 'selected' : ''}>${formatDuration(m)}</option>`)
+    .join('');
+  return `<select id="${id}" name="${name}">${options}</select>`;
+}
+
 function readForm(form, id) {
   const fields = new FormData(form);
   const number = (name) => (fields.get(name) ? Number(fields.get(name)) : null);
@@ -138,6 +156,7 @@ function readForm(form, id) {
     id,
     name: fields.get('name') ?? '',
     birth: fields.get('birth') ?? '',
+    goals: { outdoor: number('goalOutdoor'), nearWork: number('goalNearWork') },
     rx: {
       date: fields.get('rxDate'),
       right: { sph: number('right-sph'), cyl: number('right-cyl') },

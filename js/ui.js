@@ -3,6 +3,9 @@
 import { t, getLang, LANGS } from './i18n.js';
 import { ageFromBirth, formatDiopter } from './children.js';
 import { fromDateString } from './dates.js';
+import { splitMinutes } from './log.js';
+
+const locale = () => (getLang() === 'zh' ? 'zh-CN' : 'en');
 
 // Anything a parent types (like a child's name) must pass through esc()
 // before it goes into the page, so characters like < or & show as text.
@@ -32,8 +35,20 @@ export function bindLanguageButtons(root, ctx) {
 
 // '2026-09-01' → '2026年9月1日' or 'Sep 1, 2026'
 export function formatDate(text) {
-  const locale = getLang() === 'zh' ? 'zh-CN' : 'en';
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(fromDateString(text));
+  return new Intl.DateTimeFormat(locale(), { dateStyle: 'medium' }).format(fromDateString(text));
+}
+
+// A moment (milliseconds since 1970) → '08:15'
+export function formatClock(timestamp) {
+  return new Intl.DateTimeFormat(locale(), { hour: '2-digit', minute: '2-digit' }).format(new Date(timestamp));
+}
+
+// 45 → '45分钟' / '45 min';   135 → '2小时15分钟' / '2 h 15 min'
+export function formatDuration(total) {
+  const { hours, minutes } = splitMinutes(total);
+  if (hours === 0) return t('time.min', { m: minutes });
+  if (minutes === 0) return t('time.hour', { h: hours });
+  return t('time.hourMin', { h: hours, m: minutes });
 }
 
 export function ageLabel(child) {

@@ -15,6 +15,11 @@
   --warn-soft: #fff3dc;
   --warn-text: #6e4300;
   --danger: #b3261e;
+  --outdoor: #2a9361; /* progress bar: outdoor time */
+  --near: #2f6fb3; /* progress bar: near-work */
+  --near-soft: #e4eef9;
+  --near-text: #1f5a99;
+  --over: #d9822b; /* near-work over the limit */
   --shadow: 0 1px 2px rgb(0 0 0 / 0.06);
 
   --radius: 16px;
@@ -39,6 +44,11 @@
     --warn-soft: #3a2c12;
     --warn-text: #ffd791;
     --danger: #ff8a80;
+    --outdoor: #5bcf95;
+    --near: #6fa8e8;
+    --near-soft: #1c2a3a;
+    --near-text: #a9c9f0;
+    --over: #f0a050;
     --shadow: none;
   }
 }
@@ -326,6 +336,136 @@ fieldset.field label {
   font-size: 18px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+}
+
+/* ---------- Daily log ---------- */
+.log-card h2 {
+  margin-bottom: 0;
+}
+.activity {
+  padding: 16px 0;
+}
+.activity + .activity {
+  border-top: 1px solid var(--border);
+}
+.activity-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.activity-icon {
+  font-size: 26px;
+  line-height: 1.2;
+}
+.activity-name {
+  flex: 1;
+  min-width: 0;
+}
+.activity-name h3 {
+  margin: 0;
+}
+.activity-name .hint {
+  margin-top: 2px;
+}
+.activity-total {
+  min-width: 7.5em; /* fixed width, so buttons don't jump as the total grows */
+  margin: 0;
+  line-height: 1.3;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.activity-total strong {
+  font-size: 18px;
+}
+.bar {
+  height: 10px;
+  margin: 12px 0 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--border);
+}
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--outdoor);
+  transition: width 0.3s;
+}
+.activity-nearWork .bar span {
+  background: var(--near);
+}
+.activity.is-over .bar span {
+  background: var(--over);
+}
+.activity-status {
+  color: var(--muted);
+  font-size: 14px;
+}
+.activity.is-over .activity-status {
+  color: var(--warn-text);
+  font-weight: 600;
+}
+.quick-add {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.quick-add .btn {
+  padding: 0;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.activity-nearWork .quick-add .btn {
+  background: var(--near-soft);
+  color: var(--near-text);
+}
+
+.entries {
+  border-top: 1px solid var(--border);
+}
+.entries summary {
+  padding: 12px 0;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+.entries ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.entries li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+}
+.entry-time {
+  min-width: 48px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.entry-what {
+  flex: 1;
+}
+.entries-empty {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
 }
 
 /* ---------- Children ---------- */
