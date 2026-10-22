@@ -17,6 +17,8 @@ export function defaultData() {
       lang: null, // 'zh' or 'en'; null = follow the phone's language
       welcomed: false, // has the parent seen the welcome screen?
     },
+    children: [], // child profiles — see js/children.js
+    activeChildId: null, // which child the app is showing
   };
 }
 

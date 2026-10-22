@@ -35,6 +35,8 @@ test('settings added in a newer version get their default values', () => {
   const data = createStore(fakeStorage({ [STORAGE_KEY]: old })).load();
   assert.equal(data.settings.lang, 'en');
   assert.equal(data.settings.welcomed, false);
+  assert.deepEqual(data.children, []);
+  assert.equal(data.activeChildId, null);
 });
 
 test('damaged saved data: start fresh but keep a copy of the damaged text', () => {

@@ -1,16 +1,16 @@
 // today.js — the "Today" tab, the first screen parents see.
-// Stage 1: welcome card, install help, and the disclaimer.
+// Stage 2: the selected child's profile, switching between children, install help.
 
 import { t } from '../i18n.js';
+import { esc, ageLabel, childAvatar, prescriptionTable } from '../ui.js';
+import { getActiveChild } from '../children.js';
 import { isAndroid, isIOS, isInstalled, isWeChat, canPromptInstall, promptInstall } from '../device.js';
 
 export function renderToday(main, ctx) {
+  const child = getActiveChild(ctx.data);
+
   main.innerHTML = `
-    <section class="card hero">
-      <img src="icons/icon.svg" alt="" width="72" height="72" />
-      <h2>${t('app.name')}</h2>
-      <p class="muted">${t('app.tagline')}</p>
-    </section>
+    ${child ? childSwitcher(ctx.data, child) + childCard(child) : startCard()}
 
     ${installCard()}
 
@@ -22,10 +22,63 @@ export function renderToday(main, ctx) {
     <p class="footnote">${t('disclaimer.text')}</p>
   `;
 
+  main.querySelectorAll('[data-child]').forEach((button) => {
+    button.addEventListener('click', () => {
+      ctx.update((d) => {
+        d.activeChildId = button.dataset.child;
+      });
+    });
+  });
+
   main.querySelector('[data-action="install"]')?.addEventListener('click', async () => {
     await promptInstall();
     ctx.redraw();
   });
+}
+
+// No children yet: say hello and ask the parent to add one.
+function startCard() {
+  return `
+    <section class="card hero">
+      <img src="icons/icon.svg" alt="" width="72" height="72" />
+      <h2>${t('app.name')}</h2>
+      <p class="muted">${t('app.tagline')}</p>
+    </section>
+    <section class="card">
+      <h3>${t('today.start.title')}</h3>
+      <p class="muted">${t('today.start.body')}</p>
+      <a class="btn btn-primary btn-block" href="#/child/new">＋ ${t('child.add')}</a>
+    </section>`;
+}
+
+// A row of name buttons to switch child, plus "+ Add".
+function childSwitcher(data, active) {
+  const chips = data.children
+    .map(
+      (c) =>
+        `<button class="chip" type="button" data-child="${esc(c.id)}" aria-pressed="${c.id === active.id}">${esc(c.name)}</button>`,
+    )
+    .join('');
+  return `
+    <div class="chips" role="group" aria-label="${t('child.switch')}">
+      ${chips}
+      <a class="chip chip-add" href="#/child/new">＋ ${t('child.add')}</a>
+    </div>`;
+}
+
+function childCard(child) {
+  return `
+    <section class="card">
+      <div class="child-head">
+        ${childAvatar(child)}
+        <div class="child-name">
+          <h2>${esc(child.name)}</h2>
+          <p class="muted">${ageLabel(child)}</p>
+        </div>
+        <a class="btn btn-secondary btn-small" href="#/child/${esc(child.id)}">${t('child.edit')}</a>
+      </div>
+      ${child.rx ? prescriptionTable(child.rx) : `<p class="muted">${t('child.noRx')}</p>`}
+    </section>`;
 }
 
 // Help for adding the app to the home screen. Hidden once it's installed.

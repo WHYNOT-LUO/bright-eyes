@@ -15,17 +15,28 @@ import { renderToday } from './screens/today.js';
 import { renderComingSoon } from './screens/coming-soon.js';
 import { renderSettings } from './screens/settings.js';
 import { renderWelcome } from './screens/welcome.js';
+import { renderChildForm } from './screens/child-form.js';
 
-const APP_VERSION = '0.1.0';
+const APP_VERSION = '0.2.0';
 
 // The tabs along the bottom, in order.
 const TABS = [
-  { id: 'today', icon: '☀️', render: renderToday },
-  { id: 'timer', icon: '⏱️', render: renderComingSoon },
-  { id: 'week', icon: '📊', render: renderComingSoon },
-  { id: 'learn', icon: '💡', render: renderComingSoon },
-  { id: 'settings', icon: '⚙️', render: renderSettings },
+  { id: 'today', icon: '☀️' },
+  { id: 'timer', icon: '⏱️' },
+  { id: 'week', icon: '📊' },
+  { id: 'learn', icon: '💡' },
+  { id: 'settings', icon: '⚙️' },
 ];
+
+// Every screen the app can show, by the name used in the address (#/name).
+const SCREENS = {
+  today: renderToday,
+  timer: renderComingSoon,
+  week: renderComingSoon,
+  learn: renderComingSoon,
+  settings: renderSettings,
+  child: renderChildForm, // #/child/new  or  #/child/<id>
+};
 
 const store = createStore();
 let data = store.load();
@@ -44,6 +55,10 @@ const ctx = {
   },
   redraw: () => draw(),
   toast: (message) => showToast(message),
+  go: (path) => {
+    location.hash = '#/' + path;
+  },
+  back: () => (history.length > 1 ? history.back() : ctx.go('today')),
 };
 
 const el = {
@@ -56,9 +71,15 @@ const el = {
   appleTitle: document.querySelector('meta[name="apple-mobile-web-app-title"]'),
 };
 
-function currentTab() {
-  const id = location.hash.replace('#/', '');
-  return TABS.find((tab) => tab.id === id) ?? TABS[0];
+// Read the address: '#/child/abc' → { name: 'child', param: 'abc' }
+function currentRoute() {
+  const [name, param = ''] = location.hash.replace(/^#\/?/, '').split('/');
+  const known = Object.hasOwn(SCREENS, name);
+  return {
+    name: known ? name : 'today',
+    param: known ? decodeURIComponent(param) : '',
+    tab: TABS.find((tab) => tab.id === name),
+  };
 }
 
 // Draw the whole page from `data`. Called on start and after every change.
@@ -72,17 +93,17 @@ function draw() {
   el.langToggle.textContent = t('lang.toggle');
   el.langToggle.setAttribute('aria-label', t('lang.toggleLabel'));
 
-  const active = currentTab();
+  const route = currentRoute();
   el.tabbar.setAttribute('aria-label', t('tab.label'));
   el.tabbar.innerHTML = TABS.map(
     (tab) => `
-      <a href="#/${tab.id}" ${tab === active ? 'aria-current="page"' : ''}>
+      <a href="#/${tab.id}" ${tab.id === route.name ? 'aria-current="page"' : ''}>
         <span class="tab-icon" aria-hidden="true">${tab.icon}</span>
         <span>${t('tab.' + tab.id)}</span>
       </a>`,
   ).join('');
 
-  active.render(el.screen, ctx, active);
+  SCREENS[route.name](el.screen, ctx, route);
   renderWelcome(el.overlay, ctx); // only appears until the parent taps "Get started"
 }
 

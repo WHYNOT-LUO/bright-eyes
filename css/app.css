@@ -14,6 +14,7 @@
   --primary-soft: #e2f1e8;
   --warn-soft: #fff3dc;
   --warn-text: #6e4300;
+  --danger: #b3261e;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.06);
 
   --radius: 16px;
@@ -37,6 +38,7 @@
     --primary-soft: #1d3428;
     --warn-soft: #3a2c12;
     --warn-text: #ffd791;
+    --danger: #ff8a80;
     --shadow: none;
   }
 }
@@ -215,6 +217,222 @@ p:last-child {
 }
 .btn-block {
   width: 100%;
+}
+a.btn {
+  text-decoration: none;
+}
+.btn-secondary {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.btn-danger {
+  margin-top: 8px;
+  background: transparent;
+  color: var(--danger);
+}
+.btn-small {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 15px;
+}
+
+/* ---------- Forms ---------- */
+.screen-title {
+  margin: 4px 4px 12px;
+}
+.back-link {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.field {
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+}
+.field label,
+.field legend {
+  display: block;
+  margin-bottom: 6px;
+  padding: 0;
+  font-weight: 600;
+}
+fieldset.field label {
+  margin-top: 12px;
+}
+/* 16px or bigger stops iPhones zooming in when a box is tapped. */
+.form input,
+.form select {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 17px;
+  scroll-margin-top: 96px; /* keep the label visible below the header */
+}
+.form input::-webkit-date-and-time-value {
+  text-align: left;
+}
+.form [aria-invalid='true'] {
+  border-color: var(--danger);
+}
+.hint {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.hint:empty {
+  display: none;
+}
+.field-error {
+  margin: 6px 0 0;
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Prescription: right/left eye × sphere/cylinder */
+.rx-table {
+  width: 100%;
+  margin: 8px 0 4px;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+.rx-table th {
+  padding-right: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+.rx-table td {
+  padding-right: 6px;
+}
+.rx-table td:last-child {
+  padding-right: 0;
+}
+.rx-summary td {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* ---------- Children ---------- */
+.chips {
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px 12px;
+  padding: 0 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.chip[aria-pressed='true'] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.chip-add {
+  border-style: dashed;
+  color: var(--primary);
+}
+
+.child-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.child-name {
+  flex: 1;
+  min-width: 0;
+}
+.child-name h2 {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+}
+.avatar-0 {
+  background: #2a9361;
+}
+.avatar-1 {
+  background: #2f6fb3;
+}
+.avatar-2 {
+  background: #c2571a;
+}
+.avatar-3 {
+  background: #8a4fbf;
+}
+.avatar-4 {
+  background: #c23b6b;
+}
+.avatar-5 {
+  background: #1f8a8a;
+}
+
+.list {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+}
+.list-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.chevron {
+  color: var(--muted);
+  font-size: 24px;
 }
 
 /* Two or more buttons joined together, e.g. 中文 | English */

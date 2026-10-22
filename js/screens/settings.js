@@ -1,11 +1,33 @@
 // settings.js — the "Settings" tab.
-// Stage 1: language choice, disclaimer, privacy note, version.
+// Children's profiles, language choice, disclaimer, privacy note, version.
 
 import { t } from '../i18n.js';
-import { languageButtons, bindLanguageButtons } from '../ui.js';
+import { esc, ageLabel, childAvatar, languageButtons, bindLanguageButtons } from '../ui.js';
 
 export function renderSettings(main, ctx) {
+  const rows = ctx.data.children
+    .map(
+      (child) => `
+        <li>
+          <a class="list-row" href="#/child/${esc(child.id)}">
+            ${childAvatar(child)}
+            <span class="list-main">
+              <strong>${esc(child.name)}</strong>
+              <span class="muted small">${ageLabel(child)}</span>
+            </span>
+            <span class="chevron" aria-hidden="true">›</span>
+          </a>
+        </li>`,
+    )
+    .join('');
+
   main.innerHTML = `
+    <section class="card">
+      <h2>${t('settings.children')}</h2>
+      ${rows ? `<ul class="list">${rows}</ul>` : ''}
+      <a class="btn btn-secondary btn-block" href="#/child/new">＋ ${t('child.add')}</a>
+    </section>
+
     <section class="card">
       <h2>${t('settings.language')}</h2>
       ${languageButtons()}
