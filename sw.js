@@ -31,6 +31,7 @@ const APP_FILES = [
   './js/store.js',
   './js/timer.js',
   './js/ui.js',
+  './js/week.js',
   './js/screens/checkup-form.js',
   './js/screens/checkup-ui.js',
   './js/screens/child-form.js',
