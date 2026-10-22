@@ -20,6 +20,7 @@ const APP_FILES = [
   './index.html',
   './manifest.webmanifest',
   './css/app.css',
+  './js/alerts.js',
   './js/app.js',
   './js/children.js',
   './js/dates.js',
@@ -27,10 +28,12 @@ const APP_FILES = [
   './js/i18n.js',
   './js/log.js',
   './js/store.js',
+  './js/timer.js',
   './js/ui.js',
   './js/screens/child-form.js',
   './js/screens/coming-soon.js',
   './js/screens/settings.js',
+  './js/screens/timer.js',
   './js/screens/today-log.js',
   './js/screens/today.js',
   './js/screens/welcome.js',
@@ -98,6 +101,16 @@ async function freshFirst(request) {
     return (await cache.match(request, { ignoreSearch: true })) ?? offline(request, cache);
   }
 }
+
+// Tapping an eye-break notification brings the app to the front.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((windows) => (windows[0] ? windows[0].focus() : self.clients.openWindow('./#/timer'))),
+  );
+});
 
 // No saved copy and no internet: for a page, show the app; otherwise give up.
 async function offline(request, cache) {

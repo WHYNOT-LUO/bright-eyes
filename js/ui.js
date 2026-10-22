@@ -63,6 +63,31 @@ export function childAvatar(child) {
   return `<span class="avatar avatar-${colour}" aria-hidden="true">${esc(first)}</span>`;
 }
 
+// A row of name buttons to switch child, plus "+ Add". Used on Today and Timer.
+export function childSwitcher(data, active) {
+  const chips = data.children
+    .map(
+      (c) =>
+        `<button class="chip" type="button" data-child="${esc(c.id)}" aria-pressed="${c.id === active.id}">${esc(c.name)}</button>`,
+    )
+    .join('');
+  return `
+    <div class="chips" role="group" aria-label="${t('child.switch')}">
+      ${chips}
+      <a class="chip chip-add" href="#/child/new">＋ ${t('child.add')}</a>
+    </div>`;
+}
+
+export function bindChildSwitcher(root, ctx) {
+  root.querySelectorAll('[data-child]').forEach((button) => {
+    button.addEventListener('click', () => {
+      ctx.update((d) => {
+        d.activeChildId = button.dataset.child;
+      });
+    });
+  });
+}
+
 // The prescription as a small table: right/left eye × sphere/cylinder.
 export function prescriptionTable(rx) {
   const row = (label, eye) =>

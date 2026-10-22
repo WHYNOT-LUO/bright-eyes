@@ -28,8 +28,19 @@ export function logCard(data, child) {
     <section class="card log-card">
       <h2>${t('log.title', { name: esc(child.name) })}</h2>
       ${ACTIVITIES.map((type) => activityBlock(type, totals[type], goals[type])).join('')}
+      ${timerRow(data, day)}
       ${entriesList(day)}
     </section>`;
+}
+
+// Today's eye breaks, and a shortcut to the 20-20-20 timer.
+function timerRow(data, day) {
+  const running = data.timer && data.timer.phase !== 'ended';
+  return `
+    <div class="timer-row">
+      <span class="muted small">👀 ${t('log.breaksToday', { count: day.breaks })}</span>
+      <a class="timer-link" href="#/timer">⏱️ ${t(running ? 'log.timerRunning' : 'log.startTimer')} ›</a>
+    </div>`;
 }
 
 export function bindLogCard(main, ctx, child) {

@@ -2,7 +2,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { defaultData } from '../js/store.js';
-import { addEntry, compareToTarget, dayTotals, getDay, goalsFor, removeEntry, splitMinutes } from '../js/log.js';
+import {
+  addBreak,
+  addEntry,
+  compareToTarget,
+  dayTotals,
+  getDay,
+  goalsFor,
+  removeEntry,
+  splitMinutes,
+} from '../js/log.js';
 
 const DAY = '2026-10-22';
 
@@ -46,6 +55,21 @@ test('compareToTarget says how much is left or how much over', () => {
   assert.deepEqual(compareToTarget(45, 120), { ratio: 0.375, left: 75, over: 0 });
   assert.deepEqual(compareToTarget(120, 120), { ratio: 1, left: 0, over: 0 });
   assert.deepEqual(compareToTarget(200, 180), { ratio: 1, left: 0, over: 20 });
+});
+
+test('eye breaks are counted per child per day, starting from zero', () => {
+  const data = defaultData();
+  assert.equal(getDay(data, 'kid', DAY).breaks, 0);
+  addBreak(data, 'kid', DAY);
+  addBreak(data, 'kid', DAY);
+  assert.equal(getDay(data, 'kid', DAY).breaks, 2);
+  assert.equal(getDay(data, 'other-kid', DAY).breaks, 0);
+});
+
+test('days saved before breaks existed count as zero breaks', () => {
+  const data = defaultData();
+  data.logs.kid = { [DAY]: { entries: [] } };
+  assert.equal(getDay(data, 'kid', DAY).breaks, 0);
 });
 
 test('minutes split into hours and minutes', () => {

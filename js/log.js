@@ -9,6 +9,7 @@
 //           { type: 'outdoor',  minutes: 30, at: 1792600000000 },  // at = when it was tapped
 //           { type: 'nearWork', minutes: 60, at: 1792603600000 },
 //         ],
+//         breaks: 2,   // 20-20-20 eye breaks finished with the timer
 //       },
 //     },
 //   }
@@ -26,7 +27,13 @@ const MINUTES_IN_A_DAY = 24 * 60;
 
 // Read one day's page. Returns an empty page if nothing was logged.
 export function getDay(data, childId, date) {
-  return data.logs?.[childId]?.[date] ?? { entries: [] };
+  return { entries: [], breaks: 0, ...data.logs?.[childId]?.[date] };
+}
+
+function ensureDay(data, childId, date) {
+  data.logs[childId] ??= {};
+  data.logs[childId][date] ??= { entries: [], breaks: 0 };
+  return data.logs[childId][date];
 }
 
 // Returns false (and saves nothing) if the day would go over 24 hours.
@@ -34,10 +41,13 @@ export function addEntry(data, childId, date, type, minutes, at = Date.now()) {
   const totals = dayTotals(getDay(data, childId, date));
   if (totals.outdoor + totals.nearWork + minutes > MINUTES_IN_A_DAY) return false;
 
-  data.logs[childId] ??= {};
-  data.logs[childId][date] ??= { entries: [] };
-  data.logs[childId][date].entries.push({ type, minutes, at });
+  ensureDay(data, childId, date).entries.push({ type, minutes, at });
   return true;
+}
+
+export function addBreak(data, childId, date) {
+  const day = ensureDay(data, childId, date);
+  day.breaks = (day.breaks ?? 0) + 1;
 }
 
 // Entries are told apart by `at`, the moment they were added.

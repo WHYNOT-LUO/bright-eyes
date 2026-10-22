@@ -20,6 +20,7 @@ export function defaultData() {
     children: [], // child profiles — see js/children.js
     activeChildId: null, // which child the app is showing
     logs: {}, // daily outdoor / near-work entries — see js/log.js
+    timer: null, // the running 20-20-20 timer, if any — see js/timer.js
   };
 }
 

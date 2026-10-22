@@ -16,8 +16,10 @@ import { renderComingSoon } from './screens/coming-soon.js';
 import { renderSettings } from './screens/settings.js';
 import { renderWelcome } from './screens/welcome.js';
 import { renderChildForm } from './screens/child-form.js';
+import { renderTimer, tickTimer } from './screens/timer.js';
+import { keepScreenOn } from './alerts.js';
 
-const APP_VERSION = '0.3.0';
+const APP_VERSION = '0.4.0';
 
 // The tabs along the bottom, in order.
 const TABS = [
@@ -31,7 +33,7 @@ const TABS = [
 // Every screen the app can show, by the name used in the address (#/name).
 const SCREENS = {
   today: renderToday,
-  timer: renderComingSoon,
+  timer: renderTimer,
   week: renderComingSoon,
   learn: renderComingSoon,
   settings: renderSettings,
@@ -94,10 +96,12 @@ function draw() {
   el.langToggle.setAttribute('aria-label', t('lang.toggleLabel'));
 
   const route = currentRoute();
+  const timerBusy = timerRunning();
   el.tabbar.setAttribute('aria-label', t('tab.label'));
   el.tabbar.innerHTML = TABS.map(
     (tab) => `
-      <a href="#/${tab.id}" ${tab.id === route.name ? 'aria-current="page"' : ''}>
+      <a href="#/${tab.id}" ${tab.id === route.name ? 'aria-current="page"' : ''}
+        class="${tab.id === 'timer' && timerBusy ? 'tab-busy' : ''}">
         <span class="tab-icon" aria-hidden="true">${tab.icon}</span>
         <span>${t('tab.' + tab.id)}</span>
       </a>`,
@@ -105,7 +109,10 @@ function draw() {
 
   SCREENS[route.name](el.screen, ctx, route);
   renderWelcome(el.overlay, ctx); // only appears until the parent taps "Get started"
+  if (data.timer?.phase === 'due') document.title = t('timer.titleDue');
 }
+
+const timerRunning = () => Boolean(data.timer) && data.timer.phase !== 'ended';
 
 let toastTimer;
 function showToast(message, ms = 5000) {
@@ -128,9 +135,19 @@ window.addEventListener('hashchange', () => {
 
 // Coming back to the app (maybe the next morning): refresh Today so it shows the
 // right day. Other screens are left alone so a half-filled form isn't wiped.
+// Also catch up the timer, and ask again to keep the screen on.
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && currentRoute().name === 'today') draw();
+  if (document.hidden) return;
+  if (currentRoute().name === 'today') draw();
+  tickTimer(ctx);
+  if (timerRunning()) keepScreenOn(true);
 });
+
+// The 20-20-20 timer checks the clock once a second.
+setInterval(() => tickTimer(ctx), 1000);
+if (timerRunning()) keepScreenOn(true);
+// Opening the app while an eye break is waiting: show the Timer tab.
+if (data.timer?.phase === 'due' && !location.hash.startsWith('#/child')) location.hash = '#/timer';
 
 listenForInstallPrompt(draw);
 

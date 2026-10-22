@@ -117,6 +117,14 @@ test('removing a child also deletes their daily log', () => {
   assert.equal(data.logs[id], undefined);
 });
 
+test("removing a child stops a timer that is running for them", () => {
+  const data = defaultData();
+  const id = saveChild(data, input());
+  data.timer = { childId: id, phase: 'focus' };
+  removeChild(data, id);
+  assert.equal(data.timer, null);
+});
+
 test('daily goals are saved with the child', () => {
   const data = defaultData();
   const id = saveChild(data, input({ goals: { outdoor: 90, nearWork: 150 } }));

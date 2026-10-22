@@ -2,7 +2,7 @@
 // Switch child, log today's outdoor and near-work time, see the child's profile.
 
 import { t } from '../i18n.js';
-import { esc, ageLabel, childAvatar, prescriptionTable } from '../ui.js';
+import { esc, ageLabel, bindChildSwitcher, childAvatar, childSwitcher, prescriptionTable } from '../ui.js';
 import { getActiveChild } from '../children.js';
 import { isAndroid, isIOS, isInstalled, isWeChat, canPromptInstall, promptInstall } from '../device.js';
 import { logCard, bindLogCard } from './today-log.js';
@@ -24,14 +24,7 @@ export function renderToday(main, ctx) {
   `;
 
   if (child) bindLogCard(main, ctx, child);
-
-  main.querySelectorAll('[data-child]').forEach((button) => {
-    button.addEventListener('click', () => {
-      ctx.update((d) => {
-        d.activeChildId = button.dataset.child;
-      });
-    });
-  });
+  bindChildSwitcher(main, ctx);
 
   main.querySelector('[data-action="install"]')?.addEventListener('click', async () => {
     await promptInstall();
@@ -52,21 +45,6 @@ function startCard() {
       <p class="muted">${t('today.start.body')}</p>
       <a class="btn btn-primary btn-block" href="#/child/new">＋ ${t('child.add')}</a>
     </section>`;
-}
-
-// A row of name buttons to switch child, plus "+ Add".
-function childSwitcher(data, active) {
-  const chips = data.children
-    .map(
-      (c) =>
-        `<button class="chip" type="button" data-child="${esc(c.id)}" aria-pressed="${c.id === active.id}">${esc(c.name)}</button>`,
-    )
-    .join('');
-  return `
-    <div class="chips" role="group" aria-label="${t('child.switch')}">
-      ${chips}
-      <a class="chip chip-add" href="#/child/new">＋ ${t('child.add')}</a>
-    </div>`;
 }
 
 function childCard(child) {

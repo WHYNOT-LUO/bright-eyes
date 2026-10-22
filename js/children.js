@@ -88,10 +88,11 @@ export function saveChild(data, input, makeId = newId) {
   return child.id;
 }
 
-// Removes the child and everything logged for them.
+// Removes the child, everything logged for them, and their running timer.
 export function removeChild(data, id) {
   data.children = data.children.filter((c) => c.id !== id);
   delete data.logs[id];
+  if (data.timer?.childId === id) data.timer = null;
   if (data.activeChildId === id) data.activeChildId = data.children[0]?.id ?? null;
 }
 
