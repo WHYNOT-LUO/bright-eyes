@@ -98,15 +98,13 @@ function activityBlock(type, total, target) {
     <div class="activity activity-${type} ${over > 0 ? 'is-over' : ''}">
       <div class="activity-head">
         <span class="activity-icon" aria-hidden="true">${ICONS[type]}</span>
-        <div class="activity-name">
-          <h3>${name}</h3>
-          <p class="hint">${t('log.' + type + 'Hint')}</p>
-        </div>
+        <h3 class="activity-name">${name}</h3>
         <p class="activity-total">
           <strong>${formatDuration(total)}</strong><br />
           <span class="muted small">/ ${formatDuration(target)}</span>
         </p>
       </div>
+      <p class="hint activity-hint">${t('log.' + type + 'Hint')}</p>
       <div class="bar" role="progressbar" aria-label="${name}" aria-valuemin="0" aria-valuemax="${target}"
         aria-valuenow="${Math.min(total, target)}" aria-valuetext="${formatDuration(total)}">
         <span style="width: ${Math.round(ratio * 100)}%"></span>

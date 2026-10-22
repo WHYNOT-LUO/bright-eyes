@@ -24,6 +24,14 @@ export function defaultData() {
   };
 }
 
+// "Delete all data" in Settings: back to a brand-new install, keeping only the language.
+export function clearAllData(data) {
+  const lang = data.settings.lang;
+  for (const key of Object.keys(data)) delete data[key];
+  Object.assign(data, defaultData());
+  data.settings.lang = lang;
+}
+
 export function createStore(storage = globalThis.localStorage) {
   function load() {
     let text = null;

@@ -21,7 +21,7 @@ import { renderCheckupForm } from './screens/checkup-form.js';
 import { renderWeek } from './screens/week.js';
 import { keepScreenOn } from './alerts.js';
 
-const APP_VERSION = '0.7.0';
+const APP_VERSION = '1.0.0';
 
 // The tabs along the bottom, in order.
 const TABS = [

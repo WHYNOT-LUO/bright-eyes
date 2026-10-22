@@ -3,6 +3,8 @@
 
 import { t } from '../i18n.js';
 import { esc, ageLabel, childAvatar, languageButtons, bindLanguageButtons } from '../ui.js';
+import { clearAllData } from '../store.js';
+import { keepScreenOn } from '../alerts.js';
 
 export function renderSettings(main, ctx) {
   const rows = ctx.data.children
@@ -41,7 +43,21 @@ export function renderSettings(main, ctx) {
       <p>${t('privacy.text')}</p>
       <p class="muted small">${t('settings.version', { version: ctx.version })}</p>
     </section>
+
+    <section class="card">
+      <h2>${t('settings.data')}</h2>
+      <p class="muted">${t('settings.dataNote')}</p>
+      <button class="btn btn-danger btn-block" type="button" data-action="delete-all">${t('settings.deleteAll')}</button>
+    </section>
   `;
 
   bindLanguageButtons(main, ctx);
+
+  main.querySelector('[data-action="delete-all"]').addEventListener('click', () => {
+    if (!confirm(t('settings.deleteAllConfirm'))) return;
+    keepScreenOn(false); // in case a timer was running
+    ctx.update(clearAllData);
+    ctx.toast(t('settings.deletedAll'));
+    ctx.go('today');
+  });
 }

@@ -220,6 +220,11 @@ export const strings = {
     'settings.language': '语言',
     'settings.about': '关于',
     'settings.version': '版本 {version}',
+    'settings.data': '数据',
+    'settings.dataNote': '所有记录只保存在这台设备上。换手机或清除浏览器数据后，记录会消失。',
+    'settings.deleteAll': '删除所有数据',
+    'settings.deleteAllConfirm': '确定要删除所有孩子档案和记录吗？删除后无法恢复。',
+    'settings.deletedAll': '所有数据已删除',
 
     'save.failed': '数据保存失败。如果正在使用无痕浏览模式，请关闭后重试。',
   },
@@ -442,6 +447,12 @@ export const strings = {
     'settings.language': 'Language',
     'settings.about': 'About',
     'settings.version': 'Version {version}',
+    'settings.data': 'Your data',
+    'settings.dataNote':
+      'Everything is stored only on this device. Changing phones or clearing browser data removes it.',
+    'settings.deleteAll': 'Delete all data',
+    'settings.deleteAllConfirm': "Delete all children's profiles and records? This can't be undone.",
+    'settings.deletedAll': 'All data deleted',
 
     'save.failed': "This device couldn't save your data. If you're using private browsing, turn it off and try again.",
   },
