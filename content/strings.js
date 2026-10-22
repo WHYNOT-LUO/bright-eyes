@@ -6,7 +6,7 @@
 
 export const strings = {
   zh: {
-    'app.name': '亮眼睛',
+    'app.name': '明眸',
     'app.tagline': '养成护眼好习惯，守护孩子好视力',
 
     'tab.today': '今日',
