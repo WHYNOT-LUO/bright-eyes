@@ -18,7 +18,7 @@ export function renderWelcome(overlay, ctx) {
   overlay.innerHTML = `
     <div class="sheet ${justOpened ? 'slide-up' : ''}" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
       <img class="sheet-icon" src="icons/icon.svg" alt="" width="64" height="64" />
-      <h2 id="welcome-title">${t('welcome.title')}</h2>
+      <h2 id="welcome-title">${t('welcome.title', { app: t('app.name') })}</h2>
       <p>${t('welcome.body')}</p>
 
       <div class="notice">

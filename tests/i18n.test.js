@@ -39,7 +39,7 @@ test('t() returns text in the current language', () => {
   setLang('en');
   assert.equal(t('tab.today'), 'Today');
   setLang('zh');
-  assert.equal(t('tab.today'), '今天');
+  assert.equal(t('tab.today'), '今日');
 });
 
 test('t() fills in {placeholders}', () => {

@@ -7,52 +7,52 @@
 export const strings = {
   zh: {
     'app.name': '亮眼睛',
-    'app.tagline': '每天一点好习惯，守护孩子的眼睛',
+    'app.tagline': '养成护眼好习惯，守护孩子好视力',
 
-    'tab.today': '今天',
+    'tab.today': '今日',
     'tab.timer': '计时',
-    'tab.week': '本周',
+    'tab.week': '周报',
     'tab.learn': '知识',
     'tab.settings': '设置',
-    'tab.label': '主菜单',
+    'tab.label': '主导航',
 
     'lang.zh': '中文',
     'lang.en': 'English',
     'lang.toggle': 'EN',
-    'lang.toggleLabel': 'Switch to English',
+    'lang.toggleLabel': '切换到英文',
 
-    'welcome.title': '欢迎！',
-    'welcome.body': '记录孩子每天的户外时间和近距离用眼时间，按时提醒休息和复查。',
-    'welcome.language': '语言',
+    'welcome.title': '欢迎使用{app}',
+    'welcome.body': '每天记录孩子的户外活动时间和近距离用眼时间，定时提醒孩子休息眼睛，按时提醒家长带孩子复查视力。',
+    'welcome.language': '选择语言',
     'welcome.start': '开始使用',
 
     'disclaimer.title': '重要提示',
     'disclaimer.text':
-      '本应用帮助养成护眼习惯并提供提醒，不提供诊断或治疗，不能替代专业眼科检查。如果担心孩子的视力，请及时就医。',
+      '本应用仅用于帮助孩子养成护眼习惯、提供日常提醒，不能用于诊断或治疗，也不能代替专业眼科检查。如果对孩子的视力有疑虑，请及时到医院眼科就诊。',
 
-    'privacy.title': '隐私',
-    'privacy.text': '所有数据只保存在这台设备上。无需注册，没有服务器，不做任何追踪。',
+    'privacy.title': '隐私保护',
+    'privacy.text': '所有数据仅保存在本机，不会上传到任何地方。无需注册账号，也不收集任何个人信息。',
 
-    'install.title': '添加到主屏幕',
-    'install.why': '添加后可以离线使用，数据保存更稳定，也能收到休息提醒。',
-    'install.ios': 'iPhone：点「分享」按钮（方框加向上箭头），再选「添加到主屏幕」。',
-    'install.android': '安卓：点浏览器菜单「⋮」，再选「添加到主屏幕」或「安装应用」。',
-    'install.button': '安装到手机',
+    'install.title': '添加到手机桌面',
+    'install.why': '添加后可以像普通 App 一样从桌面打开，没有网络也能用，数据保存更可靠，还能收到休息提醒。',
+    'install.ios': 'iPhone：用 Safari 打开，点「分享」按钮（找不到就先点「···」），再选「添加到主屏幕」。',
+    'install.android': '安卓手机：点浏览器的菜单按钮（通常在右上角，「⋮」或「≡」），选「添加到桌面」或「添加到主屏幕」。',
+    'install.button': '添加到桌面',
 
-    'wechat.title': '请在浏览器中打开',
-    'wechat.text': '在微信里无法添加到主屏幕。请点右上角「···」，选择「在浏览器打开」。',
+    'wechat.title': '请用浏览器打开',
+    'wechat.text': '在微信里无法添加到桌面。请点右上角的「···」，选择在浏览器中打开。',
 
-    'today.next.title': '即将上线',
-    'today.next.body': '孩子档案、每日户外与近距离用眼记录、20-20-20 休息提醒、复查提醒和每周小结。',
+    'today.next.title': '即将推出',
+    'today.next.body': '孩子档案、每日户外和近距离用眼记录、20-20-20 护眼休息提醒、复查提醒、每周报告。',
 
-    'soon.title': '建设中',
-    'soon.body': '这一部分正在制作，很快就能使用。',
+    'soon.title': '开发中',
+    'soon.body': '该功能正在开发中，敬请期待。',
 
     'settings.language': '语言',
     'settings.about': '关于',
     'settings.version': '版本 {version}',
 
-    'save.failed': '无法在这台设备上保存数据。如果正在使用无痕浏览，请关闭后再试。',
+    'save.failed': '数据保存失败。如果正在使用无痕浏览模式，请关闭后重试。',
   },
 
   en: {
@@ -69,9 +69,9 @@ export const strings = {
     'lang.zh': '中文',
     'lang.en': 'English',
     'lang.toggle': '中文',
-    'lang.toggleLabel': '切换到中文',
+    'lang.toggleLabel': 'Switch to Chinese',
 
-    'welcome.title': 'Welcome!',
+    'welcome.title': 'Welcome to {app}',
     'welcome.body':
       "Track your child's outdoor time and near-work time each day, and get reminders for eye breaks and check-ups.",
     'welcome.language': 'Language',
@@ -85,17 +85,17 @@ export const strings = {
     'privacy.text': 'All data stays on this device. No account, no server, no tracking.',
 
     'install.title': 'Add to your home screen',
-    'install.why': 'Then it works offline, keeps your data safer, and can show break reminders.',
-    'install.ios': 'iPhone: tap the Share button (a square with an arrow), then "Add to Home Screen".',
-    'install.android': 'Android: tap the browser menu ⋮, then "Add to Home screen" or "Install app".',
+    'install.why': 'Then it opens like a normal app, works offline, keeps your data safer, and can show break reminders.',
+    'install.ios': 'iPhone: in Safari, tap Share (if you can\'t see it, tap ··· first), then "Add to Home Screen".',
+    'install.android': 'Android: tap the browser menu (⋮ or ≡, usually top right), then "Add to Home screen" or "Install app".',
     'install.button': 'Install on this phone',
 
     'wechat.title': 'Open in your browser',
-    'wechat.text': 'WeChat can\'t add apps to the home screen. Tap ··· at the top right, then "Open in Browser".',
+    'wechat.text': 'WeChat can\'t add apps to the home screen. Tap ··· at the top right, then choose to open in your browser.',
 
     'today.next.title': 'Coming soon',
     'today.next.body':
-      'Child profiles, a daily outdoor and near-work log, 20-20-20 break reminders, check-up reminders and a weekly summary.',
+      'Child profiles, a daily outdoor and near-work log, 20-20-20 break reminders, check-up reminders and a weekly report.',
 
     'soon.title': 'Being built',
     'soon.body': 'This part is under construction and will be ready soon.',
