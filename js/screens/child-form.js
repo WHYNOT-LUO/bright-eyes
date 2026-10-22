@@ -2,7 +2,7 @@
 // Address: #/child/new (add) or #/child/<id> (edit).
 
 import { t } from '../i18n.js';
-import { esc, formatDuration } from '../ui.js';
+import { esc, formatDuration, showFieldErrors } from '../ui.js';
 import { toDateString, toMonthString } from '../dates.js';
 import {
   CYLINDER_RANGE,
@@ -95,7 +95,7 @@ export function renderChildForm(main, ctx, route) {
     event.preventDefault();
     const input = readForm(form, existing?.id);
     const errors = validateChild(input);
-    showErrors(form, errors);
+    showFieldErrors(form, errors, 'child.error.');
     if (Object.keys(errors).length > 0) {
       form.querySelector('[aria-invalid="true"]')?.focus();
       return;
@@ -163,14 +163,4 @@ function readForm(form, id) {
       left: { sph: number('left-sph'), cyl: number('left-cyl') },
     },
   };
-}
-
-function showErrors(form, errors) {
-  form.querySelectorAll('[data-error-for]').forEach((message) => {
-    const field = message.dataset.errorFor;
-    const error = errors[field];
-    message.hidden = !error;
-    message.textContent = error ? t('child.error.' + error) : '';
-    form.elements[field].setAttribute('aria-invalid', error ? 'true' : 'false');
-  });
 }

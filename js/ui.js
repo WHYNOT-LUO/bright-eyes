@@ -38,6 +38,13 @@ export function formatDate(text) {
   return new Intl.DateTimeFormat(locale(), { dateStyle: 'medium' }).format(fromDateString(text));
 }
 
+// '2026-12-15', '09:30' → '2026年12月15日周二 09:30' or 'Tue, December 15, 2026 09:30'
+export function formatDateLong(text, time) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
+  const date = new Intl.DateTimeFormat(locale(), options).format(fromDateString(text));
+  return time ? `${date} ${time}` : date;
+}
+
 // A moment (milliseconds since 1970) → '08:15'
 export function formatClock(timestamp) {
   return new Intl.DateTimeFormat(locale(), { hour: '2-digit', minute: '2-digit' }).format(new Date(timestamp));
@@ -61,6 +68,30 @@ export function childAvatar(child) {
   const first = [...child.name][0] ?? '?';
   const colour = [...child.id].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 6;
   return `<span class="avatar avatar-${colour}" aria-hidden="true">${esc(first)}</span>`;
+}
+
+// Show or hide the red message under each form field.
+// errors looks like { date: 'datePast' }; the text comes from strings.js: prefix + 'datePast'.
+export function showFieldErrors(form, errors, prefix) {
+  form.querySelectorAll('[data-error-for]').forEach((message) => {
+    const field = message.dataset.errorFor;
+    const error = errors[field];
+    message.hidden = !error;
+    message.textContent = error ? t(prefix + error) : '';
+    form.elements[field].setAttribute('aria-invalid', error ? 'true' : 'false');
+  });
+}
+
+// Hands a file made by the app to the phone (e.g. a calendar file).
+export function downloadFile(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type: `${type};charset=utf-8` }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
 
 // A row of name buttons to switch child, plus "+ Add". Used on Today and Timer.

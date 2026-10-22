@@ -6,11 +6,14 @@ import { esc, ageLabel, bindChildSwitcher, childAvatar, childSwitcher, prescript
 import { getActiveChild } from '../children.js';
 import { isAndroid, isIOS, isInstalled, isWeChat, canPromptInstall, promptInstall } from '../device.js';
 import { logCard, bindLogCard } from './today-log.js';
+import { checkupBanners, checkupRow, bindCheckupButtons } from './checkup-ui.js';
 
 export function renderToday(main, ctx) {
   const child = getActiveChild(ctx.data);
 
   main.innerHTML = `
+    ${checkupBanners(ctx.data)}
+
     ${child ? childSwitcher(ctx.data, child) + logCard(ctx.data, child) + childCard(child) : startCard()}
 
     ${installCard()}
@@ -25,6 +28,7 @@ export function renderToday(main, ctx) {
 
   if (child) bindLogCard(main, ctx, child);
   bindChildSwitcher(main, ctx);
+  bindCheckupButtons(main, ctx);
 
   main.querySelector('[data-action="install"]')?.addEventListener('click', async () => {
     await promptInstall();
@@ -59,6 +63,7 @@ function childCard(child) {
         <a class="btn btn-secondary btn-small" href="#/child/${esc(child.id)}">${t('child.edit')}</a>
       </div>
       ${child.rx ? prescriptionTable(child.rx) : `<p class="muted">${t('child.noRx')}</p>`}
+      ${checkupRow(child)}
     </section>`;
 }
 

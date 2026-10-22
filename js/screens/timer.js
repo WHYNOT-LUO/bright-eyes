@@ -53,7 +53,7 @@ export function tickTimer(ctx) {
     dueChimes = 0;
     playDueAlert();
     if (document.hidden) notify(t('timer.notifyTitle'), t('timer.notifyBody'));
-    if (!location.hash.startsWith('#/child')) ctx.go('timer'); // don't wipe a half-filled form
+    if (!/^#\/(child|checkup)\//.test(location.hash)) ctx.go('timer'); // don't wipe a half-filled form
   } else if (event === 'breakDone') {
     ctx.update((d) => tick(d, now));
     chime('done');

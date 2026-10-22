@@ -17,9 +17,10 @@ import { renderSettings } from './screens/settings.js';
 import { renderWelcome } from './screens/welcome.js';
 import { renderChildForm } from './screens/child-form.js';
 import { renderTimer, tickTimer } from './screens/timer.js';
+import { renderCheckupForm } from './screens/checkup-form.js';
 import { keepScreenOn } from './alerts.js';
 
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.5.0';
 
 // The tabs along the bottom, in order.
 const TABS = [
@@ -38,6 +39,7 @@ const SCREENS = {
   learn: renderComingSoon,
   settings: renderSettings,
   child: renderChildForm, // #/child/new  or  #/child/<id>
+  checkup: renderCheckupForm, // #/checkup/<child id>
 };
 
 const store = createStore();
@@ -147,7 +149,7 @@ document.addEventListener('visibilitychange', () => {
 setInterval(() => tickTimer(ctx), 1000);
 if (timerRunning()) keepScreenOn(true);
 // Opening the app while an eye break is waiting: show the Timer tab.
-if (data.timer?.phase === 'due' && !location.hash.startsWith('#/child')) location.hash = '#/timer';
+if (data.timer?.phase === 'due' && !/^#\/(child|checkup)\//.test(location.hash)) location.hash = '#/timer';
 
 listenForInstallPrompt(draw);
 
