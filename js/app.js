@@ -12,7 +12,7 @@ import { createStore } from './store.js';
 import { t, setLang, getLang, detectLang } from './i18n.js';
 import { listenForInstallPrompt } from './device.js';
 import { renderToday } from './screens/today.js';
-import { renderComingSoon } from './screens/coming-soon.js';
+import { renderLearn } from './screens/learn.js';
 import { renderSettings } from './screens/settings.js';
 import { renderWelcome } from './screens/welcome.js';
 import { renderChildForm } from './screens/child-form.js';
@@ -21,7 +21,7 @@ import { renderCheckupForm } from './screens/checkup-form.js';
 import { renderWeek } from './screens/week.js';
 import { keepScreenOn } from './alerts.js';
 
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
 
 // The tabs along the bottom, in order.
 const TABS = [
@@ -37,7 +37,7 @@ const SCREENS = {
   today: renderToday,
   timer: renderTimer,
   week: renderWeek,
-  learn: renderComingSoon,
+  learn: renderLearn,
   settings: renderSettings,
   child: renderChildForm, // #/child/new  or  #/child/<id>
   checkup: renderCheckupForm, // #/checkup/<child id>

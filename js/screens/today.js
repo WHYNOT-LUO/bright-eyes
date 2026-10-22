@@ -18,11 +18,6 @@ export function renderToday(main, ctx) {
 
     ${installCard()}
 
-    <section class="card">
-      <h3>${t('today.next.title')}</h3>
-      <p class="muted">${t('today.next.body')}</p>
-    </section>
-
     <p class="footnote">${t('disclaimer.text')}</p>
   `;
 

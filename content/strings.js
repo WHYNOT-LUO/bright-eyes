@@ -44,8 +44,12 @@ export const strings = {
 
     'today.start.title': '先添加孩子',
     'today.start.body': '添加后，就可以记录孩子每天的户外活动和用眼时间了。',
-    'today.next.title': '即将推出',
-    'today.next.body': '护眼知识卡片。',
+
+    'learn.title': '护眼小知识',
+    'learn.intro': '简单实用的护眼方法，点开卡片就能阅读。',
+    'learn.placeholder': '内容待补充。',
+    'learn.draft': '待补充',
+    'learn.source': '来源：{source}',
 
     'week.needChild': '先添加孩子，就能看到每周小结。',
     'week.title': '{name}最近 7 天',
@@ -211,8 +215,6 @@ export const strings = {
     'child.error.birthTooOld': '本应用适用于 18 岁以下的孩子',
     'child.error.rxDateFuture': '验光日期不能晚于今天',
 
-    'soon.title': '开发中',
-    'soon.body': '该功能正在开发中，敬请期待。',
 
     'settings.children': '孩子档案',
     'settings.language': '语言',
@@ -262,8 +264,12 @@ export const strings = {
 
     'today.start.title': 'Start by adding your child',
     'today.start.body': 'Then you can track their outdoor time and near-work time each day.',
-    'today.next.title': 'Coming soon',
-    'today.next.body': 'Eye-care tips.',
+
+    'learn.title': 'Eye-care tips',
+    'learn.intro': 'Simple, practical ways to protect young eyes. Tap a card to read it.',
+    'learn.placeholder': 'Content coming soon.',
+    'learn.draft': 'Coming soon',
+    'learn.source': 'Source: {source}',
 
     'week.needChild': 'Add your child first to see a weekly summary.',
     'week.title': "{name}'s last 7 days",
@@ -431,8 +437,6 @@ export const strings = {
     'child.error.birthTooOld': 'This app is for children under 18',
     'child.error.rxDateFuture': "Test date can't be in the future",
 
-    'soon.title': 'Being built',
-    'soon.body': 'This part is under construction and will be ready soon.',
 
     'settings.children': 'Children',
     'settings.language': 'Language',
