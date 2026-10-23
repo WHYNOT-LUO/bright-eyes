@@ -4,7 +4,6 @@
 import { t } from '../i18n.js';
 import { esc, ageLabel, childAvatar, languageButtons, bindLanguageButtons } from '../ui.js';
 import { clearAllData } from '../store.js';
-import { keepScreenOn } from '../alerts.js';
 
 export function renderSettings(main, ctx) {
   const rows = ctx.data.children
@@ -55,8 +54,7 @@ export function renderSettings(main, ctx) {
 
   main.querySelector('[data-action="delete-all"]').addEventListener('click', () => {
     if (!confirm(t('settings.deleteAllConfirm'))) return;
-    keepScreenOn(false); // in case a timer was running
-    ctx.update(clearAllData);
+    ctx.update(clearAllData); // also stops any running timer
     ctx.toast(t('settings.deletedAll'));
     ctx.go('today');
   });

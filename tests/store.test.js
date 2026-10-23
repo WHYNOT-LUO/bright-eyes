@@ -46,6 +46,14 @@ test('damaged saved data: start fresh but keep a copy of the damaged text', () =
   assert.equal(storage.items[STORAGE_KEY + ':damaged'], '{not json');
 });
 
+test('saved text that is valid JSON but not an object is treated as damaged', () => {
+  for (const text of ['null', '42', '"hi"', '[]']) {
+    const storage = fakeStorage({ [STORAGE_KEY]: text });
+    assert.deepEqual(createStore(storage).load(), defaultData(), text);
+    assert.equal(storage.items[STORAGE_KEY + ':damaged'], text);
+  }
+});
+
 test('load() still works when the phone blocks reading storage', () => {
   const storage = fakeStorage();
   storage.getItem = () => {

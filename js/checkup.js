@@ -8,7 +8,7 @@
 // the standard format every calendar app understands). The app also shows a
 // reminder card on Today from two weeks before.
 
-import { fromDateString, toDateString } from './dates.js';
+import { fromDateString, pad, toDateString } from './dates.js';
 
 export const SOON_DAYS = 14;
 export const QUICK_PICK_MONTHS = [1, 3, 6];
@@ -105,7 +105,6 @@ export function makeCalendarFile({ id, date, time, title, note }, now = new Date
 
 // '20261215T103000' in the phone's own time zone
 function localStamp(date) {
-  const pad = (n) => String(n).padStart(2, '0');
   return `${toDateString(date).replaceAll('-', '')}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
 }
 

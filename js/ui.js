@@ -4,15 +4,11 @@ import { t, getLang, LANGS } from './i18n.js';
 import { ageFromBirth, formatDiopter } from './children.js';
 import { fromDateString } from './dates.js';
 import { splitMinutes } from './log.js';
+import { esc } from './escape.js';
+
+export { esc };
 
 const locale = () => (getLang() === 'zh' ? 'zh-CN' : 'en');
-
-// Anything a parent types (like a child's name) must pass through esc()
-// before it goes into the page, so characters like < or & show as text.
-export function esc(text) {
-  const safe = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-  return String(text).replace(/[&<>"']/g, (char) => safe[char]);
-}
 
 // Two buttons, 中文 | English. The current language shows as pressed.
 export function languageButtons() {

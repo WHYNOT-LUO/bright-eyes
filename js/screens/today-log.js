@@ -3,6 +3,7 @@
 
 import { t } from '../i18n.js';
 import { esc, formatClock, formatDuration } from '../ui.js';
+import { vibrate } from '../alerts.js';
 import { toDateString } from '../dates.js';
 import {
   ACTIVITIES,
@@ -54,7 +55,7 @@ export function bindLogCard(main, ctx, child) {
       ctx.update((d) => {
         added = addEntry(d, child.id, toDateString(new Date()), type, minutes);
       });
-      navigator.vibrate?.(10); // a tiny buzz on Android phones
+      vibrate(10); // a tiny buzz on Android phones
       const message = added
         ? t('log.added', { activity: t('log.' + type), time: formatDuration(minutes) })
         : t('log.full');

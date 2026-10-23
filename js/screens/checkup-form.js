@@ -4,7 +4,7 @@
 import { t } from '../i18n.js';
 import { esc, childAvatar, showFieldErrors } from '../ui.js';
 import { toDateString } from '../dates.js';
-import { QUICK_PICK_MONTHS, addMonths, clearCheckup, setCheckup, validateCheckup } from '../checkup.js';
+import { QUICK_PICK_MONTHS, addMonths, clearCheckup, daysUntil, setCheckup, validateCheckup } from '../checkup.js';
 
 export function renderCheckupForm(main, ctx, route) {
   const child = ctx.data.children.find((c) => c.id === route.param);
@@ -14,6 +14,8 @@ export function renderCheckupForm(main, ctx, route) {
   }
   const today = new Date();
   const current = child.checkup ?? { date: '', time: null };
+  // After a missed check-up, start with an empty date rather than the old one.
+  const startDate = current.date && daysUntil(current.date, today) >= 0 ? current.date : '';
 
   const quickPicks = QUICK_PICK_MONTHS.map(
     (n) =>
@@ -35,7 +37,7 @@ export function renderCheckupForm(main, ctx, route) {
 
       <div class="field">
         <label for="checkup-date">${t('checkup.date')}</label>
-        <input id="checkup-date" name="date" type="date" value="${current.date}"
+        <input id="checkup-date" name="date" type="date" value="${startDate}"
           min="${toDateString(today)}" max="${addMonths(today, 24)}" />
         <p class="field-error" data-error-for="date" hidden></p>
       </div>

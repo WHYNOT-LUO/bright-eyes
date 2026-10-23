@@ -1,19 +1,22 @@
 // sw.js — the "service worker": a small helper the browser runs in the background.
-// It keeps a copy of the app's files on the phone, so the app
+// It keeps a complete copy of the app on the phone, so the app
 //   • opens instantly, even on a slow connection, and
 //   • works with no internet at all.
 //
-// How it answers each request ("stale-while-revalidate"):
-//   1. Reply straight away with the saved copy.
-//   2. Meanwhile, download the newest version and save it for next time.
-// So after you publish an update, families see it the SECOND time they open the app.
+// How updates reach phones:
+//   CACHE below ends with a fingerprint of all the app's files; `npm run release`
+//   rewrites it whenever any file changes. A changed sw.js tells phones that a new
+//   version exists: they download ALL the files again as one set in the background,
+//   switch over, and delete the old copy. Families see the new version the next
+//   time they open the app. Because the whole set is swapped at once, a phone can
+//   never end up with a mix of old and new files.
 //
-// On your own computer (localhost) it does the opposite — fresh files first —
+// On your own computer (localhost) it always fetches fresh files first,
 // so your edits show up on a normal reload while you're building.
 
-const CACHE = 'bright-eyes-v1';
+const CACHE = 'bright-eyes-58052de628';
 
-// Saved on the very first visit, so the app works offline straight away.
+// Every file the app needs, saved on the first visit so it works offline straight away.
 // When you add a new file to the app, add it here too (`npm test` will remind you).
 const APP_FILES = [
   './',
@@ -26,6 +29,7 @@ const APP_FILES = [
   './js/children.js',
   './js/dates.js',
   './js/device.js',
+  './js/escape.js',
   './js/i18n.js',
   './js/learn.js',
   './js/log.js',
@@ -63,7 +67,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Remove copies saved under an older CACHE name.
+// Remove the previous version's copy (including files the app no longer uses).
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
@@ -76,23 +80,16 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
-  event.respondWith(ON_MY_COMPUTER ? freshFirst(request) : savedFirst(request, event));
+  event.respondWith(ON_MY_COMPUTER ? freshFirst(request) : savedFirst(request));
 });
 
-async function savedFirst(request, event) {
+// The saved copy of this version; the internet only for anything not saved.
+async function savedFirst(request) {
   const cache = await caches.open(CACHE);
   const saved = await cache.match(request, { ignoreSearch: true });
-  const download = fetch(request).then((response) => {
-    if (response.ok) cache.put(request, response.clone());
-    return response;
-  });
-
-  if (saved) {
-    event.waitUntil(download.catch(() => {})); // update quietly in the background
-    return saved;
-  }
+  if (saved) return saved;
   try {
-    return await download;
+    return await fetch(request);
   } catch {
     return offline(request, cache);
   }

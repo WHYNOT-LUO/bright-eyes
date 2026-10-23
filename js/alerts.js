@@ -74,21 +74,36 @@ export async function notify(title, body) {
   }
 }
 
-let wakeLock = null;
+let wakeLock = null; // the lock we hold, if any
+let requesting = false; // a request is on its way
+let wantOn = false; // what was asked for most recently
 
+// Safe to call repeatedly: asking twice gets one lock, and "off" also cancels
+// a request that is still on its way.
 export async function keepScreenOn(on) {
+  wantOn = on;
   if (!('wakeLock' in navigator)) return;
+  if (!on) {
+    const lock = wakeLock;
+    wakeLock = null;
+    await lock?.release().catch(() => {});
+    return;
+  }
+  if (wakeLock || requesting) return;
+  requesting = true;
   try {
-    if (on && !wakeLock) {
-      wakeLock = await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release', () => {
-        wakeLock = null;
-      });
-    } else if (!on && wakeLock) {
-      await wakeLock.release();
-      wakeLock = null;
+    const lock = await navigator.wakeLock.request('screen');
+    if (!wantOn) {
+      await lock.release(); // "off" was asked for while we were waiting
+      return;
     }
+    wakeLock = lock;
+    lock.addEventListener('release', () => {
+      if (wakeLock === lock) wakeLock = null; // e.g. the app was hidden
+    });
   } catch {
     // e.g. battery saver is on. The timer still works, the screen may just dim.
+  } finally {
+    requesting = false;
   }
 }

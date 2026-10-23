@@ -5,14 +5,11 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { cacheNameIn, fingerprint, listedFiles } from '../scripts/fingerprint.js';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-function listedInServiceWorker() {
-  const sw = readFileSync(join(root, 'sw.js'), 'utf8');
-  const block = sw.match(/const APP_FILES = \[([\s\S]*?)\];/)[1];
-  return [...block.matchAll(/'\.\/([^']*)'/g)].map((m) => m[1]).filter((path) => path !== '');
-}
+const listedInServiceWorker = () => listedFiles(root);
 
 function filesIn(folder) {
   return readdirSync(join(root, folder), { recursive: true })
@@ -33,6 +30,10 @@ test('sw.js lists every app file, so the app works offline', () => {
   const listed = listedInServiceWorker();
   const missing = appFiles.filter((path) => !listed.includes(path));
   assert.deepEqual(missing, [], 'Add these to APP_FILES in sw.js');
+});
+
+test('sw.js has the fingerprint of the current files (run `npm run release` if this fails)', () => {
+  assert.equal(cacheNameIn(root), fingerprint(root), 'App files changed: run `npm run release`, then commit');
 });
 
 test('every file listed in sw.js really exists', () => {

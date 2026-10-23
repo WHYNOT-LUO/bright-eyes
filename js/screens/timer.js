@@ -48,16 +48,19 @@ export function tickTimer(ctx) {
   const now = Date.now();
   const event = pendingEvent(timer, now);
 
+  // { background: true }: a form the parent is filling in is left alone.
   if (event === 'due') {
-    ctx.update((d) => tick(d, now));
+    ctx.update((d) => tick(d, now), { background: true });
     dueChimes = 0;
     playDueAlert();
     if (document.hidden) notify(t('timer.notifyTitle'), t('timer.notifyBody'));
-    if (!/^#\/(child|checkup)\//.test(location.hash)) ctx.go('timer'); // don't wipe a half-filled form
+    if (!ctx.isOnForm()) ctx.go('timer');
   } else if (event === 'breakDone') {
-    ctx.update((d) => tick(d, now));
+    ctx.update((d) => tick(d, now), { background: true });
     chime('done');
     ctx.toast(t('timer.breakDone'), 3000);
+  } else if (event === 'expired') {
+    ctx.update((d) => tick(d, now), { background: true }); // shows the session summary
   } else if (timer.phase === 'due' && !document.hidden && dueChimes < 5 && now - lastChime > 30000) {
     playDueAlert(); // remind again every 30 seconds, up to 5 times
   } else {
@@ -158,8 +161,7 @@ function renderRunning(main, ctx, child) {
     ctx.update((d) => skipBreak(d, Date.now()));
   });
   main.querySelector('[data-action="stop"]').addEventListener('click', () => {
-    keepScreenOn(false);
-    ctx.update((d) => stopTimer(d, Date.now()));
+    ctx.update((d) => stopTimer(d, Date.now())); // app.js then lets the screen switch off
   });
 
   updateDisplay(timer, Date.now());
@@ -204,11 +206,13 @@ function renderSummary(main, ctx) {
 
   main.querySelectorAll('[data-log]').forEach((button) => {
     button.addEventListener('click', () => {
+      const wantsLog = button.dataset.log === 'yes';
       let logged = 0;
       ctx.update((d) => {
-        logged = finishSession(d, { log: button.dataset.log === 'yes' });
+        logged = finishSession(d, { log: wantsLog });
       });
       if (logged) ctx.toast(t('timer.logged', { time: formatDuration(logged) }));
+      else if (wantsLog) ctx.toast(t('log.full')); // the day already has 24 hours logged
     });
   });
 }

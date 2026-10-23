@@ -5,6 +5,8 @@
 //  • Each screen is a function that draws itself into <main> using `data`.
 //  • When the parent changes something, the screen calls ctx.update(...),
 //    which changes `data`, saves it, and redraws the page.
+//  • Changes that happen by themselves (the timer, the install prompt) use
+//    { background: true }, which never redraws a form the parent is filling in.
 //  • The part of the address after # (e.g. #/week) says which tab to show,
 //    so the phone's back button works.
 
@@ -21,7 +23,7 @@ import { renderCheckupForm } from './screens/checkup-form.js';
 import { renderWeek } from './screens/week.js';
 import { keepScreenOn } from './alerts.js';
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 
 // The tabs along the bottom, in order.
 const TABS = [
@@ -43,6 +45,9 @@ const SCREENS = {
   checkup: renderCheckupForm, // #/checkup/<child id>
 };
 
+// Screens where the parent types; background changes must not redraw them.
+const FORMS = ['child', 'checkup'];
+
 const store = createStore();
 let data = store.load();
 const phoneLang = detectLang(navigator.languages ?? [navigator.language]);
@@ -53,18 +58,23 @@ const ctx = {
     return data;
   },
   version: APP_VERSION,
-  update(change) {
+  update(change, { background = false } = {}) {
     change(data);
     if (!store.save(data)) showToast(t('save.failed'));
-    draw();
+    draw({ keepForms: background });
   },
   redraw: () => draw(),
   toast: (message, ms) => showToast(message, ms),
   go: (path) => {
     location.hash = '#/' + path;
   },
-  back: () => (history.length > 1 ? history.back() : ctx.go('today')),
+  // Back to the previous screen, but never out of the app: if this screen was
+  // the first one opened in this tab, go to Today instead.
+  back: () => (movedInApp ? history.back() : ctx.go('today')),
+  isOnForm: () => FORMS.includes(currentRoute().name),
 };
+
+let movedInApp = false;
 
 const el = {
   title: document.getElementById('app-title'),
@@ -77,18 +87,24 @@ const el = {
 };
 
 // Read the address: '#/child/abc' → { name: 'child', param: 'abc' }
+// (Child ids only use letters, numbers and dashes, so nothing needs decoding.)
 function currentRoute() {
   const [name, param = ''] = location.hash.replace(/^#\/?/, '').split('/');
   const known = Object.hasOwn(SCREENS, name);
   return {
     name: known ? name : 'today',
-    param: known ? decodeURIComponent(param) : '',
+    param: known ? param : '',
     tab: TABS.find((tab) => tab.id === name),
   };
 }
 
 // Draw the whole page from `data`. Called on start and after every change.
-function draw() {
+// keepForms: leave a form screen as it is (used for background changes).
+function draw({ keepForms = false } = {}) {
+  // The screen stays on only while a timer is running (stopped, expired,
+  // child deleted, all data deleted: all of these let it switch off again).
+  if (!timerRunning()) keepScreenOn(false);
+
   setLang(data.settings.lang ?? phoneLang);
   document.documentElement.lang = getLang() === 'zh' ? 'zh-CN' : 'en';
   document.title = t('app.name');
@@ -110,7 +126,7 @@ function draw() {
       </a>`,
   ).join('');
 
-  SCREENS[route.name](el.screen, ctx, route);
+  if (!(keepForms && FORMS.includes(route.name))) SCREENS[route.name](el.screen, ctx, route);
   renderWelcome(el.overlay, ctx); // only appears until the parent taps "Get started"
   if (data.timer?.phase === 'due') document.title = t('timer.titleDue');
 }
@@ -132,6 +148,7 @@ el.langToggle.addEventListener('click', () => {
 });
 
 window.addEventListener('hashchange', () => {
+  movedInApp = true;
   draw();
   window.scrollTo(0, 0);
 });
@@ -150,9 +167,10 @@ document.addEventListener('visibilitychange', () => {
 setInterval(() => tickTimer(ctx), 1000);
 if (timerRunning()) keepScreenOn(true);
 // Opening the app while an eye break is waiting: show the Timer tab.
-if (data.timer?.phase === 'due' && !/^#\/(child|checkup)\//.test(location.hash)) location.hash = '#/timer';
+if (data.timer?.phase === 'due' && !ctx.isOnForm()) location.hash = '#/timer';
 
-listenForInstallPrompt(draw);
+// The browser may offer "Install" at any moment; show the button without wiping a form.
+listenForInstallPrompt(() => draw({ keepForms: true }));
 
 // The service worker (sw.js) keeps a copy of the app on the phone for offline use.
 if ('serviceWorker' in navigator) {

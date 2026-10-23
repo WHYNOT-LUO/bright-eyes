@@ -1,6 +1,6 @@
 // learn.js — turning the cards in content/tips.js into text for the Learn tab.
 
-import { esc } from './ui.js';
+import { esc } from './escape.js';
 
 // The card's text in the chosen language. Anything missing in that language
 // is taken from the other one, so a half-translated card still shows something.

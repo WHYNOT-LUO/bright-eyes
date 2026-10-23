@@ -74,6 +74,22 @@ test('a skipped break is not counted', () => {
   assert.equal(getDay(data, 'kid', DAY).breaks, 0);
 });
 
+test('stopping after the reminder counts close work only up to the reminder', () => {
+  const data = running();
+  tick(data, START + 20 * MIN); // reminder at 20 min; nobody responds
+  stopTimer(data, START + 140 * MIN); // parent taps Stop 2 hours later
+  assert.equal(sessionMinutes(data.timer, START + 140 * MIN), 20);
+});
+
+test('a reminder left unanswered for an hour ends the session by itself', () => {
+  const data = running();
+  tick(data, START + 20 * MIN);
+  assert.equal(tick(data, START + 79 * MIN), null);
+  assert.equal(tick(data, START + 80 * MIN), 'expired');
+  assert.equal(data.timer.phase, 'ended');
+  assert.equal(sessionMinutes(data.timer, START + 600 * MIN), 20);
+});
+
 test('stopping shows how long the session was', () => {
   const data = running();
   stopTimer(data, START + 44 * MIN + 40 * SEC);

@@ -42,11 +42,12 @@ export function createStore(storage = globalThis.localStorage) {
     }
     if (!text) return defaultData();
 
-    let saved;
+    let saved = null;
     try {
       saved = JSON.parse(text);
-    } catch {
-      // Keep the damaged text under another name instead of throwing it away.
+    } catch {}
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) {
+      // Damaged: keep the text under another name instead of throwing it away.
       try {
         storage.setItem(STORAGE_KEY + ':damaged', text);
       } catch {}
